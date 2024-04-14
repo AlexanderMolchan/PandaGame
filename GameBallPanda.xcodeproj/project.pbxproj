@@ -19,7 +19,7 @@
 		40A79B6E2BCB186B004B47DC /* GameField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A79B6D2BCB186B004B47DC /* GameField.swift */; };
 		40A79B702BCB2ACD004B47DC /* BackgroundField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A79B6F2BCB2ACD004B47DC /* BackgroundField.swift */; };
 		40A79B722BCB483F004B47DC /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A79B712BCB483F004B47DC /* Enums.swift */; };
-		40A79B752BCB4D6C004B47DC /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A79B742BCB4D6C004B47DC /* LoadingViewController.swift */; };
+		40A79B752BCB4D6C004B47DC /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A79B742BCB4D6C004B47DC /* MenuViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +35,7 @@
 		40A79B6D2BCB186B004B47DC /* GameField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameField.swift; sourceTree = "<group>"; };
 		40A79B6F2BCB2ACD004B47DC /* BackgroundField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundField.swift; sourceTree = "<group>"; };
 		40A79B712BCB483F004B47DC /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
-		40A79B742BCB4D6C004B47DC /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		40A79B742BCB4D6C004B47DC /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +104,8 @@
 		40A79B732BCB4D59004B47DC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				40A79B742BCB4D6C004B47DC /* MenuViewController.swift */,
 				40A79B542BCB1250004B47DC /* GameViewController.swift */,
-				40A79B742BCB4D6C004B47DC /* LoadingViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -191,7 +191,7 @@
 				40A79B552BCB1250004B47DC /* GameViewController.swift in Sources */,
 				40A79B512BCB1250004B47DC /* AppDelegate.swift in Sources */,
 				40A79B6E2BCB186B004B47DC /* GameField.swift in Sources */,
-				40A79B752BCB4D6C004B47DC /* LoadingViewController.swift in Sources */,
+				40A79B752BCB4D6C004B47DC /* MenuViewController.swift in Sources */,
 				40A79B532BCB1250004B47DC /* SceneDelegate.swift in Sources */,
 				40A79B722BCB483F004B47DC /* Enums.swift in Sources */,
 				40A79B702BCB2ACD004B47DC /* BackgroundField.swift in Sources */,
@@ -347,6 +347,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 526TNP28LN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GameBallPanda/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -373,6 +374,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 526TNP28LN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GameBallPanda/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
