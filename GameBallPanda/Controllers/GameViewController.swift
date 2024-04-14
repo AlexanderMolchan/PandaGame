@@ -42,6 +42,7 @@ final class GameViewController: UIViewController {
         makeConstraints()
         createGesture()
         view.backgroundColor = .magenta
+        navigationItem.hidesBackButton = true
     }
     
     private func layoutElements() {
