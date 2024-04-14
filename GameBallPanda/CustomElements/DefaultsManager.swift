@@ -26,4 +26,12 @@ final class DefaultsManager {
         }
     }
     
+    static var bestScore: Int {
+        get {
+            defaults.value(forKey: #function) as? Int ?? 0
+        } set {
+            defaults.set(newValue, forKey: #function)
+        }
+    }
+    
 }

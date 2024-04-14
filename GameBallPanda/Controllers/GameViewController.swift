@@ -14,25 +14,29 @@ final class GameViewController: UIViewController {
     // MARK: -
     // MARK: - Properties:
     
+    private var currentBallColor: GameColors = .red
+    private var currentBallPosition: BallPosition = .center
+    private var currentCornerColor: GameColors = .blue
+    private var fieldsArray = BackgroundFieldView.getFieldsArray()
+    private var ballColorsArray = GameColors.allCases
+    
     private var lastSwipeBeginningPoint: CGPoint?
-
+    private var player = AVAudioPlayer()
+    private let generator = UIImpactFeedbackGenerator()
+    private var timer = Timer()
+    
+    private var fieldOffset = 50
+    private var roundTime = 2
+    private var score = 0
+    
+    // MARK: -
+    // MARK: - UI Elements:
+    
     private var backgroundField = BackgroundFieldView()
     private var gameField = GameFieldView()
     private var ball = BallView(color: .red)
     
-    private var currentBallColor: GameColors = .red
-    private var currentBallPosition: BallPosition = .center
-    private var currentCornerColor: GameColors = .blue
-    
-    private var fieldsArray = BackgroundFieldView.getFieldsArray()
-    private var ballColorsArray = GameColors.allCases
-    
-    private var fieldOffset = 50
-    
-    private var player = AVAudioPlayer()
-    private let generator = UIImpactFeedbackGenerator()
-    
-    private lazy var backgroundImage = {
+    private var backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = .gameBackground
         imageView.contentMode = .scaleAspectFill
@@ -56,7 +60,7 @@ final class GameViewController: UIViewController {
     }
     
     deinit {
-        print("sasdas")
+        print("deinit")
     }
     
     // MARK: -
@@ -70,7 +74,6 @@ final class GameViewController: UIViewController {
         addScaleAnimationsTo(button: pauseButton)
         addPauseAction()
         navigationController?.setNavigationBarHidden(true, animated: false)
-      //  navigationItem.hidesBackButton = true
     }
     
     private func layoutElements() {
@@ -159,10 +162,13 @@ final class GameViewController: UIViewController {
     }
     
     @objc private func pauseAction() {
+        timer.invalidate()
         let settingsViewController = SettingsViewController()
         settingsViewController.backToMenuClosure = {
             self.navigationController?.popToRootViewController(animated: false)
-            
+        }
+        settingsViewController.resumeGameClosure = {
+            self.startGameRoundTimer()
         }
         settingsViewController.modalPresentationStyle = .overCurrentContext
         navigationController?.present(settingsViewController, animated: false)
@@ -252,6 +258,7 @@ final class GameViewController: UIViewController {
     private func moveBallTo(position: BallPosition) {
         playSound()
         hapticFeedback()
+        startGameRoundTimer()
         UIView.animate(withDuration: 0.4) { [weak self] in
             guard let self else { return }
             switch position {
@@ -269,6 +276,7 @@ final class GameViewController: UIViewController {
                     self.currentCornerColor = backgroundField.rightDownCorner
                 case .center:
                     self.ball.center = CGPoint(x: self.view.center.x, y: self.view.center.y + CGFloat(self.fieldOffset))
+                    self.currentBallColor = currentCornerColor
             }
             self.view.layoutIfNeeded()
         } completion: { isFinish in
@@ -278,23 +286,29 @@ final class GameViewController: UIViewController {
             self.backgroundField.setActiveColor()
             
             if self.currentBallColor == self.currentCornerColor {
-                let randomField = self.fieldsArray.shuffled().first(where: { $0.leftUpCorner != self.backgroundField.leftUpCorner })
-                self.backgroundField.removeFromSuperview()
-                self.backgroundField = randomField ?? BackgroundFieldView(image: .blueBall, leftUp: .red, rightUp: .red, rightDown: .red, leftDown: .red)
-                self.backgroundField.ballPosition = position
-                self.backgroundField.setActiveColor()
-                self.view.addSubview(self.backgroundField)
-                self.view.bringSubviewToFront(self.ball)
-                self.backgroundField.snp.makeConstraints { make in
-                    make.centerY.equalToSuperview().offset(self.fieldOffset)
-                    make.centerX.equalToSuperview()
-                    make.leading.trailing.equalToSuperview().inset(10)
+                if position == .center {
+                    self.score = 0
+                    self.timer.invalidate()
+                } else {
+                    self.score += 1
+                    let randomField = self.fieldsArray.shuffled().first(where: { $0.leftUpCorner != self.backgroundField.leftUpCorner })
+                    self.backgroundField.removeFromSuperview()
+                    self.backgroundField = randomField ?? BackgroundFieldView(image: .blueBall, leftUp: .red, rightUp: .red, rightDown: .red, leftDown: .red)
+                    self.backgroundField.ballPosition = position
+                    self.backgroundField.setActiveColor()
+                    self.view.addSubview(self.backgroundField)
+                    self.view.bringSubviewToFront(self.ball)
+                    self.backgroundField.snp.makeConstraints { make in
+                        make.centerY.equalToSuperview().offset(self.fieldOffset)
+                        make.centerX.equalToSuperview()
+                        make.leading.trailing.equalToSuperview().inset(10)
+                    }
+                    self.currentCornerColor = self.backgroundField.activeCornerColor ?? .blue
                 }
-                self.currentCornerColor = self.backgroundField.activeCornerColor ?? .blue
             } else {
-                print("ERRORERRORERRORGAMEOVERBUDDY")
+                self.gameOver()
+                self.timer.invalidate()
             }
-            
             guard let randomColor = self.ballColorsArray.shuffled().first(where: { $0 != self.currentCornerColor }) else { return }
             self.ball.setColor(color: randomColor)
             self.currentBallColor = randomColor
@@ -321,6 +335,37 @@ final class GameViewController: UIViewController {
         if DefaultsManager.isHapticEnabled {
             generator.impactOccurred()
         }
+    }
+    
+    private func startGameRoundTimer() {
+        timer.invalidate()
+        roundTime = 2
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(roundTimerAction), userInfo: nil, repeats: true)
+    }
+    
+    @objc private func roundTimerAction() {
+        roundTime -= 1
+        if roundTime == 0 {
+            timer.invalidate()
+            gameOver()
+        }
+    }
+    
+    private func gameOver() {
+        let gameOverController = GameOverController(score: score)
+        gameOverController.backToMenuClosure = {
+            self.navigationController?.popToRootViewController(animated: false)
+        }
+        gameOverController.startAgainClosure = {
+            self.pauseButton.alpha = 1
+            self.moveBallTo(position: .center)
+        }
+        if DefaultsManager.bestScore < score {
+            DefaultsManager.bestScore = score
+        }
+        gameOverController.modalPresentationStyle = .overCurrentContext
+        pauseButton.alpha = 0
+        navigationController?.present(gameOverController, animated: true)
     }
     
 }

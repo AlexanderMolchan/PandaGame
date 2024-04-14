@@ -10,6 +10,9 @@ import SnapKit
 
 final class NotificationViewController: UIViewController {
     
+    // MARK: -
+    // MARK: - UI Elements:
+    
     private lazy var notificationLabel = {
         let label = UILabel()
         label.text = "Allow notifications about bonuses and promos"
@@ -48,17 +51,27 @@ final class NotificationViewController: UIViewController {
         return button
     }()
     
+    // MARK: -
+    // MARK: - Closures:
+    
     var controllerClosedClosure: (() -> ())?
+    
+    // MARK: -
+    // MARK: - Lifecycle:
     
     override func viewDidLoad() {
         addGradient()
         layoutElements()
         makeConstraints()
+        addTargets()
     }
     
     deinit {
         controllerClosedClosure?()
     }
+    
+    // MARK: -
+    // MARK: - Configurations:
     
     private func addGradient() {
         let gradient: CAGradientLayer = CAGradientLayer()
@@ -102,4 +115,16 @@ final class NotificationViewController: UIViewController {
         }
     }
     
+    private func addTargets() {
+        confirmButton.addTarget(self, action: #selector(confirmAction), for: .touchUpInside)
+        skipButton.addTarget(self, action: #selector(skipAction), for: .touchUpInside)
+    }
+    
+    @objc private func confirmAction() {
+        dismiss(animated: true)
+    }
+    
+    @objc private func skipAction() {
+        dismiss(animated: true)
+    }
 }

@@ -10,6 +10,9 @@ import SnapKit
 
 final class SettingsViewController: UIViewController {
     
+    // MARK: -
+    // MARK: - UI Elements:
+    
     private lazy var backgroundShadow = {
         let imageView = UIImageView()
         imageView.image = .shadow
@@ -106,28 +109,33 @@ final class SettingsViewController: UIViewController {
         return view
     }()
     
+    // MARK: -
+    // MARK: - Closures:
+    
     var backToMenuClosure: (() -> ())?
+    var resumeGameClosure: (() -> ())?
+    
+    // MARK: -
+    // MARK: - Lifecycle:
 
     override func viewDidLoad() {
         super.viewDidLoad()
         controllerConfigurate()
     }
     
+    // MARK: -
+    // MARK: - Configuration:
+    
     private func controllerConfigurate() {
         layoutElements()
         makeConstraints()
         addGesture()
         addScaleAnimationsTo(button: backToMenuButton)
-        addScaleAnimationsTo(button: hapticSwitch)
+        addTargets()
         self.view.backgroundColor = .clear
-        
-        backToMenuButton.addTarget(self, action: #selector(backToMainMenu), for: .touchUpInside)
     }
     
-    @objc private func backToMainMenu() {
-        closeController()
-        backToMenuClosure?()
-    }
+    
     
     private func layoutElements() {
         view.addSubview(backgroundShadow)
@@ -141,9 +149,9 @@ final class SettingsViewController: UIViewController {
         view.addSubview(bottomTapArea)
         
         soundBanner.addSubview(soundLabel)
-        soundBanner.addSubview(soundSwitch)
+        view.addSubview(soundSwitch)
         hapticBanner.addSubview(hapticLabel)
-        hapticBanner.addSubview(hapticSwitch)
+        view.addSubview(hapticSwitch)
     }
     
     private func makeConstraints() {
@@ -194,15 +202,15 @@ final class SettingsViewController: UIViewController {
         }
         
         soundSwitch.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().inset(15)
+            make.centerY.equalTo(soundBanner)
+            make.trailing.equalTo(soundBanner).inset(15)
             make.height.equalTo(15)
             make.width.equalTo(40)
         }
         
         hapticSwitch.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().inset(15)
+            make.centerY.equalTo(hapticBanner)
+            make.trailing.equalTo(hapticBanner).inset(15)
             make.height.equalTo(15)
             make.width.equalTo(40)
         }
@@ -223,8 +231,10 @@ final class SettingsViewController: UIViewController {
             make.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(backToMenuButton.snp.bottom).offset(20)
         }
-
     }
+    
+    // MARK: -
+    // MARK: - Logic:
     
     private func addGesture() {
         let topGesture = UITapGestureRecognizer(target: self, action: #selector(closeController))
@@ -235,6 +245,7 @@ final class SettingsViewController: UIViewController {
     
     @objc private func closeController() {
         dismiss(animated: false)
+        resumeGameClosure?()
     }
     
     private func addScaleAnimationsTo(button: UIButton) {
@@ -249,6 +260,27 @@ final class SettingsViewController: UIViewController {
     
     @objc private func buttonTapped(sender: UIButton) {
         sender.transform = CGAffineTransformMakeScale(0.9, 0.9)
+    }
+    
+    private func addTargets() {
+        backToMenuButton.addTarget(self, action: #selector(backToMainMenu), for: .touchUpInside)
+        soundSwitch.addTarget(self, action: #selector(soundToggle), for: .touchUpInside)
+        hapticSwitch.addTarget(self, action: #selector(hapticToggle), for: .touchUpInside)
+    }
+    
+    @objc private func backToMainMenu() {
+        closeController()
+        backToMenuClosure?()
+    }
+    
+    @objc private func soundToggle(sender: UIButton) {
+        sender.isSelected.toggle()
+        DefaultsManager.isSoundEnabled = sender.isSelected
+    }
+    
+    @objc private func hapticToggle(sender: UIButton) {
+        sender.isSelected.toggle()
+        DefaultsManager.isHapticEnabled = sender.isSelected
     }
     
 }

@@ -11,6 +11,9 @@ import SafariServices
 
 final class MenuViewController: UIViewController {
     
+    // MARK: -
+    // MARK: - UI Elements:
+    
     private lazy var backgroundImage = {
         let imageView = UIImageView()
         imageView.image = .backgroundLoadMenu
@@ -65,9 +68,15 @@ final class MenuViewController: UIViewController {
         return button
     }()
     
+    // MARK: -
+    // MARK: - Properties:
+    
     private var timer = Timer()
     private var loadingTime = 2
     private var notificationTime = 2
+    
+    // MARK: -
+    // MARK: - Lifecycle:
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,6 +89,9 @@ final class MenuViewController: UIViewController {
         super.viewWillAppear(animated)
         addNotificationControllerTimer()
     }
+    
+    // MARK: -
+    // MARK: - Configuration
     
     private func configurate() {
         layoutElements()
@@ -119,7 +131,6 @@ final class MenuViewController: UIViewController {
         pandaImage.alpha = 0
         playNowButton.alpha = 0
         privacyButton.alpha = 0
-        
     }
     
     private func makeMenuConstraints() {
@@ -143,6 +154,9 @@ final class MenuViewController: UIViewController {
             make.height.equalTo(40)
         }
     }
+    
+    // MARK: -
+    // MARK: - Logic:
     
     private func addTimers() {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerAnimation), userInfo: nil, repeats: true)
