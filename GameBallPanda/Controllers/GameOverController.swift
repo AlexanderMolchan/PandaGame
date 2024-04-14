@@ -138,9 +138,9 @@ final class GameOverController: UIViewController {
         
         menuBanner.snp.makeConstraints { make in
             make.bottom.equalTo(menuRect.snp.top).inset(-10)
-            make.leading.trailing.equalToSuperview().inset(30)
             make.centerX.equalToSuperview()
             make.height.equalTo(270)
+            make.width.equalTo(300)
         }
         
         scoreLabel.snp.makeConstraints { make in
