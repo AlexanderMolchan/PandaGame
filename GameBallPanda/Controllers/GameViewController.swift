@@ -26,6 +26,15 @@ final class GameViewController: UIViewController {
     private var fieldsArray = BackgroundFieldView.getFieldsArray()
     private var ballColorsArray = GameColors.allCases
     
+    private var fieldOffset = 50
+    
+    private lazy var backgroundImage = {
+        let imageView = UIImageView()
+        imageView.image = .gameBackground
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
     // MARK: -
     // MARK: - Lifecycle:
     
@@ -48,15 +57,21 @@ final class GameViewController: UIViewController {
     private func layoutElements() {
         backgroundField = BackgroundFieldView(image: .gbryField, leftUp: .green, rightUp: .blue, rightDown: .red, leftDown: .yellow)
         
+        view.addSubview(backgroundImage)
         view.addSubview(backgroundField)
         view.addSubview(gameField)
         view.addSubview(ball)
-        ball.center = view.center
+        ball.center = CGPoint(x: view.center.x, y: view.center.y + CGFloat(fieldOffset))
     }
     
     private func makeConstraints() {
+        backgroundImage.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         backgroundField.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerY.equalToSuperview().offset(fieldOffset)
+            make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(10)
         }
         backgroundField.layoutIfNeeded()
@@ -65,7 +80,8 @@ final class GameViewController: UIViewController {
         let gameFieldWidth = backgroundFieldWidth * 0.4
         
         gameField.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerY.equalToSuperview().offset(fieldOffset)
+            make.centerX.equalToSuperview()
             make.height.width.equalTo(gameFieldWidth)
         }
         gameField.layoutIfNeeded()
@@ -86,7 +102,7 @@ final class GameViewController: UIViewController {
         
         let minX = (screenWidth - gameFieldWidth) / 2
         let maxX = minX + gameFieldWidth
-        let minY = (screenHeight - gameFieldHeight) / 2
+        let minY = ((screenHeight - gameFieldHeight) / 2) + CGFloat(fieldOffset)
         let maxY = minY + gameFieldHeight
                 
         gameField.leftUpCorner = CGPoint(x: minX, y: minY)
@@ -196,7 +212,7 @@ final class GameViewController: UIViewController {
                     self.ball.center = self.gameField.rightDownCorner
                     self.currentCornerColor = backgroundField.rightDownCorner
                 case .center:
-                    self.ball.center = self.view.center
+                    self.ball.center = CGPoint(x: self.view.center.x, y: self.view.center.y + CGFloat(self.fieldOffset))
             }
             self.view.layoutIfNeeded()
         } completion: { isFinish in
@@ -214,7 +230,8 @@ final class GameViewController: UIViewController {
                 self.view.addSubview(self.backgroundField)
                 self.view.bringSubviewToFront(self.ball)
                 self.backgroundField.snp.makeConstraints { make in
-                    make.center.equalToSuperview()
+                    make.centerY.equalToSuperview().offset(self.fieldOffset)
+                    make.centerX.equalToSuperview()
                     make.leading.trailing.equalToSuperview().inset(10)
                 }
                 self.currentCornerColor = self.backgroundField.activeCornerColor ?? .blue

@@ -67,13 +67,18 @@ final class MenuViewController: UIViewController {
     
     private var timer = Timer()
     private var loadingTime = 3
-    private var notificationTime = 5
+    private var notificationTime = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configurate()
         addTimers()
         addActions()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addNotificationControllerTimer()
     }
     
     private func configurate() {
@@ -143,12 +148,48 @@ final class MenuViewController: UIViewController {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerAnimation), userInfo: nil, repeats: true)
     }
     
+    private func addNotificationControllerTimer() {
+        notificationTime = 5
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(notificationControllerPresent), userInfo: nil, repeats: true)
+    }
+    
     @objc private func timerAnimation() {
         loadingTime -= 1
         loadingElement.layer.add(bounceAnimation, forKey: nil)
         if loadingTime == 0 {
             timer.invalidate()
             transitionToMenu()
+        }
+    }
+    
+    @objc private func notificationControllerPresent() {
+        notificationTime -= 1
+        if notificationTime == 0 {
+            timer.invalidate()
+            let notificationController = NotificationViewController()
+            notificationController.controllerClosedClosure = {
+                UIView.animate(withDuration: 0.4) { [weak self] in
+                    guard let self else { return }
+                    self.playNowButton.alpha = 1
+                    self.privacyButton.alpha = 1
+                }
+            }
+            notificationController.modalPresentationStyle = .pageSheet
+            guard let sheet = notificationController.sheetPresentationController else { return }
+            let viewHeight = Double(view.frame.size.height)
+            let multiplier = 0.4
+            let customDetend = UISheetPresentationController.Detent.custom { context in
+                viewHeight * multiplier
+            }
+            sheet.detents = [customDetend]
+            UIView.animate(withDuration: 0.4) { [weak self] in
+                guard let self else { return }
+                self.playNowButton.alpha = 0
+                self.privacyButton.alpha = 0
+            } completion: { isFinish in
+                guard isFinish else { return }
+                self.navigationController?.present(notificationController, animated: true)
+            }
         }
     }
     
@@ -168,6 +209,8 @@ final class MenuViewController: UIViewController {
                 self.pandaImage.alpha = 1
                 self.playNowButton.alpha = 1
                 self.privacyButton.alpha = 1
+            } completion: { isFinish in
+                self.addNotificationControllerTimer()
             }
         }
     }
@@ -198,8 +241,6 @@ final class MenuViewController: UIViewController {
     @objc private func privacyAction() {
         if let url = URL(string: "https://en.wikipedia.org/wiki/Quentin_Tarantino") {
             let config = SFSafariViewController.Configuration()
-            config.entersReaderIfAvailable = true
-            
             let vc = SFSafariViewController(url: url, configuration: config)
             present(vc, animated: true)
         }
