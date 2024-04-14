@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import AVFoundation
 
 final class GameViewController: UIViewController {
     
@@ -28,11 +29,22 @@ final class GameViewController: UIViewController {
     
     private var fieldOffset = 50
     
+    private var player = AVAudioPlayer()
+    private let generator = UIImpactFeedbackGenerator()
+    
     private lazy var backgroundImage = {
         let imageView = UIImageView()
         imageView.image = .gameBackground
         imageView.contentMode = .scaleAspectFill
         return imageView
+    }()
+    
+    private lazy var pauseButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(.pause, for: .normal)
+        button.setImage(.pause, for: .highlighted)
+        button.imageView?.contentMode = .scaleAspectFit
+        return button
     }()
     
     // MARK: -
@@ -43,15 +55,22 @@ final class GameViewController: UIViewController {
         controllerConfiguration()
     }
     
+    deinit {
+        print("sasdas")
+    }
+    
     // MARK: -
     // MARK: - Configurations:
     
     private func controllerConfiguration() {
+        createSound()
         layoutElements()
         makeConstraints()
         createGesture()
-        view.backgroundColor = .magenta
-        navigationItem.hidesBackButton = true
+        addScaleAnimationsTo(button: pauseButton)
+        addPauseAction()
+        navigationController?.setNavigationBarHidden(true, animated: false)
+      //  navigationItem.hidesBackButton = true
     }
     
     private func layoutElements() {
@@ -61,6 +80,7 @@ final class GameViewController: UIViewController {
         view.addSubview(backgroundField)
         view.addSubview(gameField)
         view.addSubview(ball)
+        view.addSubview(pauseButton)
         ball.center = CGPoint(x: view.center.x, y: view.center.y + CGFloat(fieldOffset))
     }
     
@@ -85,6 +105,12 @@ final class GameViewController: UIViewController {
             make.height.width.equalTo(gameFieldWidth)
         }
         gameField.layoutIfNeeded()
+        
+        pauseButton.snp.makeConstraints { make in
+            make.width.height.equalTo(40)
+            make.leading.equalToSuperview().inset(30)
+            make.top.equalToSuperview().inset(50)
+        }
         
         createFieldCorners()
     }
@@ -111,8 +137,36 @@ final class GameViewController: UIViewController {
         gameField.rightDownCorner = CGPoint(x: maxX, y: maxY)
     }
     
+    private func addScaleAnimationsTo(button: UIButton) {
+        button.addTarget(self, action: #selector(buttonTapped(sender: )), for: .touchDown)
+        button.addTarget(self, action: #selector(buttonScale(sender: )), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonScale(sender: )), for: .touchDragOutside)
+    }
+    
+    @objc private func buttonScale(sender: UIButton) {
+        sender.transform = CGAffineTransformMakeScale(1, 1)
+        }
+    
+    @objc private func buttonTapped(sender: UIButton) {
+        sender.transform = CGAffineTransformMakeScale(0.9, 0.9)
+    }
+    
     // MARK: -
     // MARK: - Action functions:
+    
+    private func addPauseAction() {
+        pauseButton.addTarget(self, action: #selector(pauseAction), for: .touchUpInside)
+    }
+    
+    @objc private func pauseAction() {
+        let settingsViewController = SettingsViewController()
+        settingsViewController.backToMenuClosure = {
+            self.navigationController?.popToRootViewController(animated: false)
+            
+        }
+        settingsViewController.modalPresentationStyle = .overCurrentContext
+        navigationController?.present(settingsViewController, animated: false)
+    }
     
     @objc func ballSwipe(sender: UISwipeGestureRecognizer) {
         if sender.state == .began {
@@ -196,6 +250,8 @@ final class GameViewController: UIViewController {
     }
     
     private func moveBallTo(position: BallPosition) {
+        playSound()
+        hapticFeedback()
         UIView.animate(withDuration: 0.4) { [weak self] in
             guard let self else { return }
             switch position {
@@ -242,6 +298,28 @@ final class GameViewController: UIViewController {
             guard let randomColor = self.ballColorsArray.shuffled().first(where: { $0 != self.currentCornerColor }) else { return }
             self.ball.setColor(color: randomColor)
             self.currentBallColor = randomColor
+        }
+    }
+    
+    private func createSound() {
+        guard let path = Bundle.main.path(forResource: "popSound.mp3", ofType: nil) else { return }
+        let url = URL(fileURLWithPath: path)
+        do {
+            player = try AVAudioPlayer(contentsOf: url)
+        } catch {
+            print("SoundError")
+        }
+    }
+    
+    private func playSound() {
+        if DefaultsManager.isSoundEnabled {
+            player.play()
+        }
+    }
+    
+    private func hapticFeedback() {
+        if DefaultsManager.isHapticEnabled {
+            generator.impactOccurred()
         }
     }
     

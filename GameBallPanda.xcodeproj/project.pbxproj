@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		407351322BCC13EB00DBD887 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 407351312BCC13EB00DBD887 /* SnapKit */; };
 		407351342BCC184000DBD887 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407351332BCC184000DBD887 /* NotificationController.swift */; };
+		407351372BCC280300DBD887 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 407351362BCC280300DBD887 /* SnapKit */; };
+		4073513A2BCC2BCD00DBD887 /* popSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 407351382BCC2BCD00DBD887 /* popSound.mp3 */; };
+		4073513C2BCC2E7400DBD887 /* DefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4073513B2BCC2E7400DBD887 /* DefaultsManager.swift */; };
+		4073513E2BCC2F0300DBD887 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4073513D2BCC2F0300DBD887 /* SettingsViewController.swift */; };
 		40A79B512BCB1250004B47DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A79B502BCB1250004B47DC /* AppDelegate.swift */; };
 		40A79B532BCB1250004B47DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A79B522BCB1250004B47DC /* SceneDelegate.swift */; };
 		40A79B552BCB1250004B47DC /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A79B542BCB1250004B47DC /* GameViewController.swift */; };
@@ -24,6 +27,9 @@
 
 /* Begin PBXFileReference section */
 		407351332BCC184000DBD887 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		407351382BCC2BCD00DBD887 /* popSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = popSound.mp3; sourceTree = "<group>"; };
+		4073513B2BCC2E7400DBD887 /* DefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsManager.swift; sourceTree = "<group>"; };
+		4073513D2BCC2F0300DBD887 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		40A79B4D2BCB1250004B47DC /* GameBallPanda.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameBallPanda.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40A79B502BCB1250004B47DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40A79B522BCB1250004B47DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -44,13 +50,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				407351322BCC13EB00DBD887 /* SnapKit in Frameworks */,
+				407351372BCC280300DBD887 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		407351392BCC2BCD00DBD887 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				407351382BCC2BCD00DBD887 /* popSound.mp3 */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		40A79B442BCB1250004B47DC = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +90,7 @@
 				40A79B502BCB1250004B47DC /* AppDelegate.swift */,
 				40A79B522BCB1250004B47DC /* SceneDelegate.swift */,
 				40A79B592BCB1252004B47DC /* Assets.xcassets */,
+				407351392BCC2BCD00DBD887 /* Sounds */,
 				40A79B5E2BCB1252004B47DC /* Info.plist */,
 			);
 			path = GameBallPanda;
@@ -97,6 +112,7 @@
 				40A79B6D2BCB186B004B47DC /* GameField.swift */,
 				40A79B6F2BCB2ACD004B47DC /* BackgroundField.swift */,
 				40A79B712BCB483F004B47DC /* Enums.swift */,
+				4073513B2BCC2E7400DBD887 /* DefaultsManager.swift */,
 			);
 			path = CustomElements;
 			sourceTree = "<group>";
@@ -107,6 +123,7 @@
 				40A79B742BCB4D6C004B47DC /* MenuViewController.swift */,
 				40A79B542BCB1250004B47DC /* GameViewController.swift */,
 				407351332BCC184000DBD887 /* NotificationController.swift */,
+				4073513D2BCC2F0300DBD887 /* SettingsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -128,7 +145,7 @@
 			);
 			name = GameBallPanda;
 			packageProductDependencies = (
-				407351312BCC13EB00DBD887 /* SnapKit */,
+				407351362BCC280300DBD887 /* SnapKit */,
 			);
 			productName = GameBallPanda;
 			productReference = 40A79B4D2BCB1250004B47DC /* GameBallPanda.app */;
@@ -159,7 +176,7 @@
 			);
 			mainGroup = 40A79B442BCB1250004B47DC;
 			packageReferences = (
-				407351302BCC13EB00DBD887 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				407351352BCC280300DBD887 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 40A79B4E2BCB1250004B47DC /* Products */;
 			projectDirPath = "";
@@ -177,6 +194,7 @@
 			files = (
 				40A79B5A2BCB1252004B47DC /* Assets.xcassets in Resources */,
 				40A79B5D2BCB1252004B47DC /* Base in Resources */,
+				4073513A2BCC2BCD00DBD887 /* popSound.mp3 in Resources */,
 				40A79B582BCB1250004B47DC /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -190,11 +208,13 @@
 			files = (
 				40A79B552BCB1250004B47DC /* GameViewController.swift in Sources */,
 				40A79B512BCB1250004B47DC /* AppDelegate.swift in Sources */,
+				4073513E2BCC2F0300DBD887 /* SettingsViewController.swift in Sources */,
 				40A79B6E2BCB186B004B47DC /* GameField.swift in Sources */,
 				40A79B752BCB4D6C004B47DC /* MenuViewController.swift in Sources */,
 				40A79B532BCB1250004B47DC /* SceneDelegate.swift in Sources */,
 				40A79B722BCB483F004B47DC /* Enums.swift in Sources */,
 				407351342BCC184000DBD887 /* NotificationController.swift in Sources */,
+				4073513C2BCC2E7400DBD887 /* DefaultsManager.swift in Sources */,
 				40A79B702BCB2ACD004B47DC /* BackgroundField.swift in Sources */,
 				40A79B672BCB1386004B47DC /* BallView.swift in Sources */,
 			);
@@ -419,7 +439,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		407351302BCC13EB00DBD887 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+		407351352BCC280300DBD887 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
 			requirement = {
@@ -430,9 +450,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		407351312BCC13EB00DBD887 /* SnapKit */ = {
+		407351362BCC280300DBD887 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 407351302BCC13EB00DBD887 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			package = 407351352BCC280300DBD887 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -66,8 +66,8 @@ final class MenuViewController: UIViewController {
     }()
     
     private var timer = Timer()
-    private var loadingTime = 3
-    private var notificationTime = 3
+    private var loadingTime = 2
+    private var notificationTime = 2
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -149,7 +149,7 @@ final class MenuViewController: UIViewController {
     }
     
     private func addNotificationControllerTimer() {
-        notificationTime = 5
+        notificationTime = 3
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(notificationControllerPresent), userInfo: nil, repeats: true)
     }
     
